@@ -14,4 +14,12 @@ public class Point
    public double dot(Point other){
       return this.x*other.x + this.y*other.y + this.z*other.z;
    }
+
+   public double magnitude(){
+      return Math.sqrt(x*x + y*y + z*z);
+   }
+
+   public Point subtract(Point other){
+      return new Point(x - other.x, y - other.y, z - other.z);
+   }
 }
