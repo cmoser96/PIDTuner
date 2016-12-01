@@ -45,8 +45,15 @@ public class InvertedPendulum
    }
 
    public void step(){
+      computeAcceleration();
       angularVel += angularAccel*Main.DT;
-      //update position
-
+      double dtheta = angularVel*Main.DT;
+      Point r = head.subtract(pointOfContact);
+      Point rhat = r.unitVector();
+      double dz = -Math.cos(dtheta);
+      double dxy = Math.sin(dtheta);
+      double dx = dxy*rhat.x;
+      double dy  = dxy*rhat.y;
+      head = new Point(head.x+dx, head.y+dy, head.z+dz);
    }
 }

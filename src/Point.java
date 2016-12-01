@@ -22,4 +22,13 @@ public class Point
    public Point subtract(Point other){
       return new Point(x - other.x, y - other.y, z - other.z);
    }
+
+   public Point add(Point other){
+      return new Point(x + other.x, y + other.y, z + other.z);
+   }
+
+   public Point unitVector(){
+      double mag = magnitude();
+      return new Point(x/mag, y/mag, z/mag);
+   }
 }
