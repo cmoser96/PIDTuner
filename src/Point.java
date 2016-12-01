@@ -31,4 +31,9 @@ public class Point
       double mag = magnitude();
       return new Point(x/mag, y/mag, z/mag);
    }
+
+   @Override
+   public String toString(){
+      return String.format("%.2f, %.2f, %.2f", x,y,z);
+   }
 }

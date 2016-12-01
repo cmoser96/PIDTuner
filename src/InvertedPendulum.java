@@ -55,5 +55,15 @@ public class InvertedPendulum
       double dx = dxy*rhat.x;
       double dy  = dxy*rhat.y;
       head = new Point(head.x+dx, head.y+dy, head.z+dz);
+      System.out.println(head);
    }
+
+   public Point getPointOfContact(){
+      return pointOfContact;
+   }
+
+   public Point getHead(){
+      return head;
+   }
+
 }
