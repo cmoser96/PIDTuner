@@ -11,6 +11,8 @@ public class InvertedPendulum
 
    private final Point stableEq, unstableEq;
 
+   private PID pid = new PID(); //will change this later after we get a thing that trains PIDs. Or have this passed in to the constructor
+
    public InvertedPendulum(double radius){
       this.pointOfContact = new Point(0,0,0);
       this.head = new Point(0,0,radius);
@@ -42,6 +44,12 @@ public class InvertedPendulum
       Point equilibrium = stableEq.subtract(head);
       double theta = Math.asin(r.dot(equilibrium)/(r.magnitude() * equilibrium.magnitude()));
       this.angularAccel = -9.8 * theta / radius;
+   }
+
+   public double externalAcceleration(){
+      double thetaDiff = Math.acos(unstableEq.dot(head)/(unstableEq.magnitude()*head.magnitude()));
+      angularAccel = pid.getCorrection(thetaDiff);
+      return angularAccel;
    }
 
    public void step(){
