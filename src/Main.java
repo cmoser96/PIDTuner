@@ -23,13 +23,13 @@ public class Main {
 
         frame.setVisible(true);
 
-        while (true) {
-            frame.repaint();
-            try {
-                Thread.sleep((long) (DT * 1000));
-            } catch (InterruptedException e) {
+        Simulator sim = new Simulator((int) (DT*1000)){
+            @Override
+            public void simulate(){
+                frame.repaint();
             }
-        }
+        };
+        sim.runSimulation();
     }
 
     public static JPanel mainDrawing() {
