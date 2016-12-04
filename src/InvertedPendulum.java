@@ -1,69 +1,76 @@
 /**
  * Created by serena on 11/28/16.
  */
-public class InvertedPendulum
-{
-   private Point pointOfContact, head;
-   private final double mass; //kg
-   private final double radius; //m
+public class InvertedPendulum {
+    private Point pointOfContact, head;
+    private final double mass; //kg
+    private final double radius; //m
 
-   private double angularVel, angularAccel;
+    private double angularVel, angularAccel;
 
-   private final Point stableEq, unstableEq;
+    private final Point stableEq, unstableEq;
 
-   public InvertedPendulum(double radius){
-      this.pointOfContact = new Point(0,0,0);
-      this.head = new Point(0,0,radius);
-      this.mass = 1;
-      this.radius = radius;
+    private PID pid = new PID(); //will change this later after we get a thing that trains PIDs. Or have this passed in to the constructor
 
-      this.angularVel = 0;
-      this.angularAccel = 0;
+    public InvertedPendulum(double radius) {
+        this.pointOfContact = new Point(0, 0, 0);
+        this.head = new Point(0, 0, radius);
+        this.mass = 1;
+        this.radius = radius;
 
-      this.stableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
-      this.unstableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
-   }
+        this.angularVel = 0;
+        this.angularAccel = 0;
 
-   public InvertedPendulum(double x, double y, double z){
-      this.pointOfContact = new Point(0,0,0);
-      this.head = new Point(x,y,z);
-      this.mass = 1;
-      this.radius = Math.sqrt(x*x + y*y + z*z);
+        this.stableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
+        this.unstableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
+    }
 
-      this.angularVel = 0;
-      this.angularAccel = 0;
+    public InvertedPendulum(double x, double y, double z) {
+        this.pointOfContact = new Point(0, 0, 0);
+        this.head = new Point(x, y, z);
+        this.mass = 1;
+        this.radius = Math.sqrt(x * x + y * y + z * z);
 
-      this.stableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
-      this.unstableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
-   }
+        this.angularVel = 0;
+        this.angularAccel = 0;
 
-   public void computeAcceleration(){
-      Point r = head.subtract(pointOfContact);
-      Point equilibrium = stableEq.subtract(head);
-      double theta = Math.asin(r.dot(equilibrium)/(r.magnitude() * equilibrium.magnitude()));
-      this.angularAccel = -9.8 * theta / radius;
-   }
+        this.stableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
+        this.unstableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
+    }
 
-   public void step(){
-      computeAcceleration();
-      angularVel += angularAccel*Main.DT;
-      double dtheta = angularVel*Main.DT;
-      Point r = head.subtract(pointOfContact);
-      Point rhat = r.unitVector();
-      double dz = -Math.cos(dtheta);
-      double dxy = Math.sin(dtheta);
-      double dx = dxy*rhat.x;
-      double dy  = dxy*rhat.y;
-      head = new Point(head.x+dx, head.y+dy, head.z+dz);
-      System.out.println(head);
-   }
+    public void computeAcceleration() {
+        Point r = head.subtract(pointOfContact);
+        Point equilibrium = stableEq.subtract(head);
+        double theta = Math.asin(r.dot(equilibrium) / (r.magnitude() * equilibrium.magnitude()));
+        this.angularAccel = -9.8 * theta / radius;
+    }
 
-   public Point getPointOfContact(){
-      return pointOfContact;
-   }
+    public double externalAcceleration() {
+        double thetaDiff = unstableEq.angleBetween(head);
+        angularAccel = pid.getCorrection(thetaDiff);
+        return angularAccel;
+    }
 
-   public Point getHead(){
-      return head;
-   }
+    public void step() {
+        computeAcceleration();
+        angularVel += angularAccel * Main.DT;
+        double dtheta = angularVel * Main.DT;
+        Point r = head.subtract(pointOfContact);
+        Point rhat = r.unitVector();
+        double dz = -Math.cos(dtheta);
+        double dxy = Math.sin(dtheta);
+        double dx = dxy * rhat.x;
+        double dy = dxy * rhat.y;
+        head = new Point(head.x + dx, head.y + dy, head.z + dz);
+        System.out.println(head);
+    }
+
+    public Point getPointOfContact() {
+        return pointOfContact;
+    }
+
+    public Point getHead() {
+        return head;
+    }
 
 }
