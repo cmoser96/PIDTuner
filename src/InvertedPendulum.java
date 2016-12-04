@@ -10,9 +10,9 @@ public class InvertedPendulum {
 
     private final Point stableEq, unstableEq;
 
-    private PID pid = new PID(); //will change this later after we get a thing that trains PIDs. Or have this passed in to the constructor
+    private PID pid;
 
-    public InvertedPendulum(double radius) {
+    public InvertedPendulum(double radius, PID pid) {
         this.pointOfContact = new Point(0, 0, 0);
         this.head = new Point(0, 0, radius);
         this.mass = 1;
@@ -23,9 +23,11 @@ public class InvertedPendulum {
 
         this.stableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
         this.unstableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
+
+        this.pid = pid;
     }
 
-    public InvertedPendulum(double x, double y, double z) {
+    public InvertedPendulum(double x, double y, double z, PID pid) {
         this.pointOfContact = new Point(0, 0, 0);
         this.head = new Point(x, y, z);
         this.mass = 1;
@@ -36,6 +38,8 @@ public class InvertedPendulum {
 
         this.stableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
         this.unstableEq = new Point(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
+
+        this.pid = pid;
     }
 
     public void computeAcceleration() {
@@ -46,7 +50,7 @@ public class InvertedPendulum {
     }
 
     public double externalAcceleration() {
-        double thetaDiff = unstableEq.angleBetween(head);
+        double thetaDiff = getAngleBtwnUnstable();
         angularAccel = pid.getCorrection(thetaDiff);
         return angularAccel;
     }
@@ -71,6 +75,10 @@ public class InvertedPendulum {
 
     public Point getHead() {
         return head;
+    }
+
+    public double getAngleBtwnUnstable(){
+        return unstableEq.angleBetween(head);
     }
 
 }

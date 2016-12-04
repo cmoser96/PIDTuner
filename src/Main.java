@@ -8,7 +8,8 @@ public class Main {
 
     public static final double DT = 1 / 100;
     public static final int WIDTH = 800, HEIGHT = 800;
-    private static InvertedPendulum pend = new InvertedPendulum(3, 0, 5);
+    private static PID pid = new PID();
+    private static InvertedPendulum pend = new InvertedPendulum(3, 0, 5, pid);
     private static InvertedPendulumDrawer pendulumDrawer;
 
     public static void main(String[] args) {
