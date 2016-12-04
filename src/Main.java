@@ -6,7 +6,7 @@ import java.awt.*;
  */
 public class Main{
 
-    public static final double DT = 1/100;
+    public static final double DT = 1.0/100.0;
     public static final int WIDTH = 800, HEIGHT = 800;
     private static InvertedPendulum pend = new InvertedPendulum(3,0,5);
     private static InvertedPendulumDrawer pendulumDrawer;
