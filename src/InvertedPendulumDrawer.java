@@ -1,3 +1,4 @@
+import javax.print.attribute.standard.ColorSupported;
 import java.awt.*;
 
 /**
@@ -25,8 +26,10 @@ public class InvertedPendulumDrawer {
         int headY = centerY - (int) pend.getHead().z * SCALE;
 
         g.drawLine(pointOfContactX, pointOfContactY, headX, headY);
-        g.drawOval(pointOfContactX - POINT_OF_CONTACT_RADIUS, pointOfContactY - POINT_OF_CONTACT_RADIUS, 2 * POINT_OF_CONTACT_RADIUS, 2 * POINT_OF_CONTACT_RADIUS);
-        g.drawOval(headX - HEAD_RADIUS, headY - HEAD_RADIUS, HEAD_RADIUS * 2, HEAD_RADIUS * 2);
+        g.setColor(new Color(0x89cc0e));
+        g.fillOval(pointOfContactX - POINT_OF_CONTACT_RADIUS, pointOfContactY - POINT_OF_CONTACT_RADIUS, 2 * POINT_OF_CONTACT_RADIUS, 2 * POINT_OF_CONTACT_RADIUS);
+        g.setColor(new Color(0x561872));
+        g.fillOval(headX - HEAD_RADIUS, headY - HEAD_RADIUS, HEAD_RADIUS * 2, HEAD_RADIUS * 2);
     }
 
 }

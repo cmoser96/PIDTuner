@@ -9,7 +9,7 @@ public class Main {
     public static final double DT = 1.0/1000.0;
     public static final int WIDTH = 800, HEIGHT = 800;
     private static PID pid = new PID();
-    private static InvertedPendulum pend = new InvertedPendulum(5, 0, 0, pid);
+    private static InvertedPendulum pend = new InvertedPendulum(10, 0, 5, pid);
     private static InvertedPendulumDrawer pendulumDrawer;
 
     public static void main(String[] args) {

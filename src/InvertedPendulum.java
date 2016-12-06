@@ -49,13 +49,13 @@ public class InvertedPendulum {
         double T = .5*this.mass*Math.pow(this.radius, 2)*Math.pow(this.angularVel, 2);
         double U = 9.81*this.mass*this.radius*(1- Math.cos(theta));
 
-        this.angularAccel = -9.81*Math.sin(theta)/this.radius;
+        this.angularAccel = -9.81*Math.sin(theta)/this.radius + externalAcceleration();
     }
 
     public double externalAcceleration() {
         double thetaDiff = getAngleBtwnUnstable();
-        angularAccel = pid.getCorrection(thetaDiff);
-        return angularAccel;
+        double externalAccel = pid.getCorrection(thetaDiff);
+        return externalAccel;
     }
 
     public void step() {
