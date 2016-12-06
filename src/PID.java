@@ -3,9 +3,9 @@
  */
 public class PID {
     private double pterm, dterm, iterm;
+    private double istateBound;
 
     private double istate = 0.0;
-    private double istateBound;
     private double prevError = 0.0;
 
     public PID() {
@@ -52,4 +52,10 @@ public class PID {
         return istateBound;
     }
 
+    public void setConstants(double newDTerm, double newPTerm, double newITerm, double newIBound){
+        this.dterm = newDTerm;
+        this.pterm = newPTerm;
+        this.iterm = newITerm;
+        this.istateBound = newIBound;
+    }
 }

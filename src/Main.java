@@ -8,7 +8,8 @@ public class Main {
 
     public static final double DT = 1.0/100.0;
     public static final int WIDTH = 800, HEIGHT = 800;
-    private static InvertedPendulum pend = new InvertedPendulum(3, 0, 5);
+    private static PID pid = new PID();
+    private static InvertedPendulum pend = new InvertedPendulum(3, 0, 5, pid);
     private static InvertedPendulumDrawer pendulumDrawer;
 
     public static void main(String[] args) {
@@ -22,13 +23,13 @@ public class Main {
 
         frame.setVisible(true);
 
-        while (true) {
-            frame.repaint();
-            try {
-                Thread.sleep((long) (DT * 1000));
-            } catch (InterruptedException e) {
+        Simulator sim = new Simulator((int) (DT*1000)){
+            @Override
+            public void simulate(){
+                frame.repaint();
             }
-        }
+        };
+        sim.runSimulation();
     }
 
     public static JPanel mainDrawing() {
