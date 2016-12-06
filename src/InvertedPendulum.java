@@ -42,7 +42,12 @@ public class InvertedPendulum {
         Point r = head.subtract(pointOfContact);
         Point equilibrium = stableEq.subtract(head);
         double theta = Math.asin(r.dot(equilibrium) / (r.magnitude() * equilibrium.magnitude()));
-        this.angularAccel = -9.8 * theta / radius;
+
+        //Lagrangian:
+        double T = .5*this.mass*Math.pow(this.radius, 2)*Math.pow(this.angularVel, 2);
+        double U = 9.81*this.mass*this.radius*(1- Math.cos(theta));
+
+        this.angularAccel = -9.81*Math.sin(theta)/this.radius;
     }
 
     public double externalAcceleration() {
@@ -57,11 +62,11 @@ public class InvertedPendulum {
         double dtheta = angularVel * Main.DT;
         Point r = head.subtract(pointOfContact);
         Point rhat = r.unitVector();
-        double dz = -Math.cos(dtheta);
-        double dxy = Math.sin(dtheta);
-        double dx = dxy * rhat.x;
-        double dy = dxy * rhat.y;
-        head = new Point(head.x + dx, head.y + dy, head.z + dz);
+        double theta = stableEq.angleBetween(head)+dtheta;
+        double z = -Math.cos(theta);
+        double x = Math.sin(theta);
+        System.out.println();
+        head = new Point(x, head.y, z);
         System.out.println(head);
     }
 
