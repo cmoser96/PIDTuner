@@ -2,11 +2,12 @@
  * Created by serena on 12/4/16.
  */
 public class Simulator {
+    private static final double TIME_CONSTANT = 1.0/10.0;
     private long prevTime = 0L;
     private int dt;
 
-    public Simulator(int msDelay){
-        this.dt = msDelay;
+    public Simulator(int msDelay) {
+        this.dt = (int)(msDelay * TIME_CONSTANT);
     }
 
     public void simulate(){}
