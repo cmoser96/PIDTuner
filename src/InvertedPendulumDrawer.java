@@ -19,6 +19,10 @@ public class InvertedPendulumDrawer {
 
     public void stepAndDraw(Graphics g) {
         pend.step();
+        draw(g);
+    }
+
+    public void draw(Graphics g){
         int pointOfContactX = centerX + (int) pend.getPointOfContact().x * SCALE;
         int pointOfContactY = centerY - (int) pend.getPointOfContact().z * SCALE;
 

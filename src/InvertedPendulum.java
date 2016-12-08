@@ -94,4 +94,14 @@ public class InvertedPendulum {
             return -absVal;
     }
 
+    public void resetToPos(Vector3D pos){
+        this.head = pos;
+        this.angularAccel = 0.0;
+        this.angularVel = 0.0;
+    }
+
+    public PID getPID(){
+        return pid;
+    }
+
 }
