@@ -13,25 +13,18 @@ public class InvertedPendulum {
     private PID pid;
 
     public InvertedPendulum(double radius, PID pid) {
-        this.pointOfContact = new Vector3D(0, 0, 0);
-        this.head = new Vector3D(0, 0, radius);
-        this.mass = 1;
-        this.radius = radius;
-
-        this.angularVel = 0;
-        this.angularAccel = 0;
-
-        this.stableEq = new Vector3D(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
-        this.unstableEq = new Vector3D(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
-
-        this.pid = pid;
+        this(0, 0, radius, radius, pid);
     }
 
     public InvertedPendulum(double x, double y, double z, PID pid) {
+        this(x, y, z, Math.sqrt(x * x + y * y + z * z), pid);
+    }
+    
+    private InvertedPendulum(double x, double y, double z, double radius, PID pid){
         this.pointOfContact = new Vector3D(0, 0, 0);
         this.head = new Vector3D(x, y, z);
         this.mass = 1;
-        this.radius = Math.sqrt(x * x + y * y + z * z);
+        this.radius = radius;
 
         this.angularVel = 0;
         this.angularAccel = 0;

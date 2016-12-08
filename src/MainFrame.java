@@ -10,15 +10,7 @@ public class MainFrame extends JFrame {
     public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
 
     public MainFrame(InvertedPendulum pend) {
-        super("Inverted Pendulum");
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        pendulumDrawer = new InvertedPendulumDrawer(pend, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-
-        add(mainDrawing(true));
-
-        setVisible(true);
+        this(pend, true);
     }
 
     public MainFrame(InvertedPendulum pend, boolean stepDuringPaint) {

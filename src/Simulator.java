@@ -5,8 +5,6 @@ public class Simulator {
     private static final double TIME_CONSTANT = 100.0;
     private long prevTime = 0L;
     private int dt;
-    Thread thread = null;
-    Runnable runnable = null;
 
     public Simulator(int msDelay) {
         this.dt = (int) (msDelay * TIME_CONSTANT);
