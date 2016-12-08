@@ -2,42 +2,42 @@
  * Created by serena on 11/28/16.
  */
 public class InvertedPendulum {
-    private Vector pointOfContact, head;
+    private Vector3D pointOfContact, head;
     private final double mass; //kg
     private final double radius; //m
 
     private double angularVel, angularAccel;
 
-    private final Vector stableEq, unstableEq;
+    private final Vector3D stableEq, unstableEq;
 
     private PID pid;
 
     public InvertedPendulum(double radius, PID pid) {
-        this.pointOfContact = new Vector(0, 0, 0);
-        this.head = new Vector(0, 0, radius);
+        this.pointOfContact = new Vector3D(0, 0, 0);
+        this.head = new Vector3D(0, 0, radius);
         this.mass = 1;
         this.radius = radius;
 
         this.angularVel = 0;
         this.angularAccel = 0;
 
-        this.stableEq = new Vector(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
-        this.unstableEq = new Vector(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
+        this.stableEq = new Vector3D(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
+        this.unstableEq = new Vector3D(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
 
         this.pid = pid;
     }
 
     public InvertedPendulum(double x, double y, double z, PID pid) {
-        this.pointOfContact = new Vector(0, 0, 0);
-        this.head = new Vector(x, y, z);
+        this.pointOfContact = new Vector3D(0, 0, 0);
+        this.head = new Vector3D(x, y, z);
         this.mass = 1;
         this.radius = Math.sqrt(x * x + y * y + z * z);
 
         this.angularVel = 0;
         this.angularAccel = 0;
 
-        this.stableEq = new Vector(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
-        this.unstableEq = new Vector(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
+        this.stableEq = new Vector3D(pointOfContact.x, pointOfContact.y, pointOfContact.z - radius);
+        this.unstableEq = new Vector3D(pointOfContact.x, pointOfContact.y, pointOfContact.z + radius);
 
         this.pid = pid;
     }
@@ -65,14 +65,14 @@ public class InvertedPendulum {
         double theta = getAngleBtwnStable()+dtheta;
         double z = -Math.cos(theta)*radius;
         double x = Math.sin(theta)*radius;
-        head = new Vector(x+pointOfContact.x, head.y, z+pointOfContact.z);
+        head = new Vector3D(x+pointOfContact.x, head.y, z+pointOfContact.z);
     }
 
-    public Vector getPointOfContact() {
+    public Vector3D getPointOfContact() {
         return pointOfContact;
     }
 
-    public Vector getHead() {
+    public Vector3D getHead() {
         return head;
     }
 
