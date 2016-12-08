@@ -16,31 +16,14 @@ public class Simulator {
     }
 
     public void runSimulation(int numSteps) {
-//        if (thread == null) {
-//            runnable = new Runnable() {
-//                @Override
-//                public void run() {
         int i = 0;
-                    while(i<numSteps){
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime >= (prevTime + dt)) {
-                            simulate();
-                            prevTime = currentTime;
-                            i++;
-                        }
-                    }
-                }
-//            };
-//            this.thread = new Thread(runnable);
-////        }
-//
-//        thread.start();
-//    }
-
-//    public void stopSimulation() {
-//        if (thread.isAlive()) {
-//            thread.interrupt();
-//
-//        }
-//    }
+        while (i < numSteps) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime >= (prevTime + dt)) {
+                simulate();
+                prevTime = currentTime;
+                i++;
+            }
+        }
+    }
 }

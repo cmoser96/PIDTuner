@@ -23,7 +23,7 @@ public class Main {
 //        sim.runSimulation();
 
         PIDTuner tuner = new PIDTuner(pend);
-        tuner.trainPID();
+        tuner.gradientDescent();
     }
 }
 

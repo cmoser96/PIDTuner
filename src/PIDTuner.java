@@ -43,7 +43,7 @@ public class PIDTuner {
             this.frame = null;
     }
 
-    public void trainPID(){
+    private void trainPID(){
         for(int j = 0; j<NUM_TESTS; j++){
             double d = random.nextDouble()*D_RANGE+D_LOWER;
             double p = random.nextDouble()*P_RANGE+P_LOWER;
@@ -74,6 +74,15 @@ public class PIDTuner {
             System.out.println(j);
             totalErrorAbs[0] = 0.0;
         }
+    }
+
+    private void regression(){
+
+    }
+
+    public void gradientDescent(){
+        trainPID();
+        regression();
     }
 
 }

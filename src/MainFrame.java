@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
             public void paintComponent(Graphics g) {
                 g.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
                 super.paintComponent(g);
-                if(step)
+                if (step)
                     pendulumDrawer.stepAndDraw(g);
                 else
                     pendulumDrawer.draw(g);
