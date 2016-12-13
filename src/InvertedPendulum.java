@@ -19,7 +19,7 @@ public class InvertedPendulum {
     public InvertedPendulum(double x, double y, double z, PID pid) {
         this(x, y, z, Math.sqrt(x * x + y * y + z * z), pid);
     }
-    
+
     private InvertedPendulum(double x, double y, double z, double radius, PID pid){
         this.pointOfContact = new Vector3D(0, 0, 0);
         this.head = new Vector3D(x, y, z);

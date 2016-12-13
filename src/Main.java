@@ -1,12 +1,9 @@
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * Created by carl on 11/19/16.
  */
 public class Main {
 
-    public static final double DT = 1.0 / 1000.0;
+    public static final double DT = 1.0 / 10.0;
 
     private static PID pid = new PID();
     private static InvertedPendulum pend = new InvertedPendulum(10, 0, 5, pid);
@@ -22,8 +19,8 @@ public class Main {
 //        };
 //        sim.runSimulation();
 
-        PIDTuner tuner = new PIDTuner(pend);
-        tuner.gradientDescent();
+        PIDTuner tuner = new PIDTuner(pend, false);
+        tuner.trainPID();
     }
 }
 

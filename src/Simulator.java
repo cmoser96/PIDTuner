@@ -7,7 +7,7 @@ public class Simulator {
     private int dt;
 
     public Simulator(int msDelay) {
-        this.dt = (int) (msDelay * TIME_CONSTANT);
+        this.dt = (int) msDelay;
     }
 
     public void simulate() {
