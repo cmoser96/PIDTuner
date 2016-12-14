@@ -18,8 +18,8 @@ public class Simulator {
         while (i < numSteps) {
             long currentTime = System.currentTimeMillis();
             if (currentTime >= (prevTime + dt)) {
-                simulate();
                 prevTime = currentTime;
+                simulate();
                 i++;
             }
         }
