@@ -50,4 +50,14 @@ plt.title("i vs score")
 plt.subplot(224)
 plt.plot(bound, score, 'ro')
 plt.title("bound vs score")
+plt.figure()
+
+score_color = []
+for s in score:
+    if s > 3500:
+        score_color.append(3500)
+    else:
+        score_color.append(s)
+plt.scatter(d, p, c=score_color)
+plt.gray()
 plt.show()

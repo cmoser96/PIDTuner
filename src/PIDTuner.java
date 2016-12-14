@@ -33,8 +33,8 @@ public class PIDTuner {
     public static final double I_BOUND_UPPER = 10000.0, I_BOUND_LOWER = 0.0, I_BOUND_RANGE = I_BOUND_UPPER - I_BOUND_LOWER;
 
     private static final int GRAD_DESCENT_ITERATIONS = Integer.MAX_VALUE;
-    private static final double GRAD_DESCENT_THRESHOLD = 10;
-    private static final double ALPHA = 0.001;
+    private static final double GRAD_DESCENT_THRESHOLD = 0.00000001;
+    private static final double ALPHA = 0.005;
 
     public PIDTuner(InvertedPendulum pendulum) {
         this.pid = pendulum.getPID();
@@ -55,7 +55,7 @@ public class PIDTuner {
 
     private void testPIDPoints() {
         for (int j = 0; j < NUM_TESTS; j++) {
-            double d = 0;//random.nextDouble() * D_RANGE + D_LOWER;
+            double d = random.nextDouble() * D_RANGE + D_LOWER;
             double p = random.nextDouble() * P_RANGE + P_LOWER;
             double i = 0;//random.nextDouble() * I_RANGE + I_LOWER;
             double bound = 0;//random.nextDouble() * I_BOUND_RANGE + I_BOUND_LOWER;
@@ -129,7 +129,7 @@ public class PIDTuner {
         double[] coefficients = regression.getCoeff(); //aw + bx + cy + dz + ew^2 + fx^2 + gy^2 + hz^2 + iw^3 + jx^3 + ky^3 + lz^3
         PIDFunction f = new PIDFunction(coefficients);
 
-        double d = random.nextDouble() * D_RANGE + D_LOWER;
+        double d = 0;//random.nextDouble() * D_RANGE + D_LOWER;
         double p = random.nextDouble() * P_RANGE + P_LOWER;
         double i = 0;//random.nextDouble() * I_RANGE + I_LOWER;
         double bound = 0;//random.nextDouble() * I_BOUND_RANGE + I_BOUND_LOWER;
