@@ -5,60 +5,52 @@ public class PIDFunction {
 
     private double intercept;
     private double d1, p1, i1, bound1;
-    private double d2, p2, i2, bound2;
-    private double d3, p3, i3, bound3;
+    private double d2, p2, i2, pd, pi, id, bound2;
+    private double d3, p3, i3, pd2, p2d, id2, p2i, i2d, pi2, pid, bound3;
 
     public PIDFunction(double[] coefficients) {
-//        intercept = coefficients[0];
-//        d1 = coefficients[1];
-//        p1 = coefficients[2];
-//        i1 = coefficients[3];
-//        bound1 = coefficients[4];
-//
-//        d2 = coefficients[5];
-//        p2 = coefficients[6];
-//        i2 = coefficients[7];
-//        bound2 = coefficients[8];
-//
-//        d3 = coefficients[9];
-//        p3 = coefficients[10];
-//        i3 = coefficients[11];
-//        bound3 = coefficients[12];
-
         intercept = coefficients[0];
         d1 = coefficients[1];
         p1 = coefficients[2];
-        i1 = 0;
-        bound1 = 0;
-
-        d2 = coefficients[3];
-        p2 = coefficients[4];
-        i2 = 0;
-        bound2 = 0;
-
-        d3 = coefficients[5];
-        p3 = coefficients[6];
-        i3 =  0;
-        bound3 =  0;
+        i1 = coefficients[3];
+        pd = coefficients[4];
+        pi = coefficients[5];
+        id = coefficients[6];
+        d2 = coefficients[7];
+        p2 = coefficients[8];
+        i2 = coefficients[9];
+        p2d = coefficients[10];
+        pd2 = coefficients[11];
+        p2i = coefficients[12];
+        pi2 = coefficients[13];
+        id2 = coefficients[14];
+        i2d = coefficients[15];
+        d3 = coefficients[16];
+        p3 = coefficients[17];
+        i3 = coefficients[18];
+        pid = coefficients[19];
     }
 
     public double solve(double d, double p, double i, double bound) {
-        return intercept + d1*d + p1*p + i1*i + bound1*bound +
-                d2*d*d + p2*p*p + i2*i*i + bound2*bound*bound +
-                d3*d*d*d + p3*p*p*p + i3*i*i*i + bound3*bound*bound*bound;
+        return intercept + (d1 * d) + (p1 * p) + (i1 * i) +
+                (d2 * d * d) + (p2 * p * p) + (i2 * i * i) + (pd * p * d) + (pi * p * i) + (id * i * d) +
+                (d3 * d * d * d) + (p3 * p * p * p) + (i3 * i * i * i) + (pd2 * p * d * d) + (p2d * p * p * d) + (id2 * i * d * d) + (p2i * p * p * i) + (i2d * i * i * d) + (pi2 * p * i * i) + (pid * p * i * d);
     }
 
 
-    public double gradientD(double d) {
-        return d1 + 2 * d2 * d + 3 * d3 * d * d;
+    public double gradientD(double d, double p, double i) {
+        return (d1) + (d2 * d) + (pd * p) + ((id * i) +
+                (d3 * d * d) + (pd2 * p * d) + (p2d * p * p) + (id2 * i * d) + (i2d * i * i)) + (pid * p * i);
     }
 
-    public double gradientP(double p) {
-        return p1 + 2 * p2 * p + 3 * p3 * p * p;
+    public double gradientP(double d, double p, double i) {
+        return (p1) + (p2 * p) + (pd * d) + (pi * i) +
+                (p3 * p * p) + (pd2 * d * d) + (p2d * p * d) + (p2i * p * i) + (pi2 * i * i) + (pid * i * d);
     }
 
-    public double gradientI(double i) {
-        return i1 + 2 * i2 * i + 3 * i3 * i * i;
+    public double gradientI(double d, double p, double i) {
+        return (i1) + (i2 * i) + (pi * p) + (id * d) +
+                (i3 * i * i) + (id2 * d * d) + (p2i * p * p) + (i2d * i * d) + (pi2 * p * i) + (pid * p * d);
     }
 
     public double gradientBound(double bound) {

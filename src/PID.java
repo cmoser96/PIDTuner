@@ -26,7 +26,7 @@ public class PID {
         boundIstate();
         double integral = iterm * istate;
 
-        return proportional + derivative + integral;
+        return proportional + derivative - integral;
     }
 
     private void boundIstate() {

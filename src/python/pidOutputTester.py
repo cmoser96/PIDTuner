@@ -54,8 +54,8 @@ plt.figure()
 
 score_color = []
 for s in score:
-    if s > 3500:
-        score_color.append(3500)
+    if s > 2900:
+        score_color.append(2900)
     else:
         score_color.append(s)
 plt.scatter(d, p, c=score_color)

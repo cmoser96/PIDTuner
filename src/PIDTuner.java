@@ -33,14 +33,14 @@ public class PIDTuner {
     private final double[] score = new double[NUM_TESTS];
     private Vector3D originalPos;
 
-    public static final double D_UPPER = 1.5, D_LOWER = -1.5, D_RANGE = D_UPPER - D_LOWER;
-    public static final double P_UPPER = 1.5, P_LOWER = -1.5, P_RANGE = P_UPPER - P_LOWER;
-    public static final double I_UPPER = 10000.0, I_LOWER = 0.0, I_RANGE = I_UPPER - I_LOWER;
+    public static final double D_UPPER = 1.5, D_LOWER = 0.0, D_RANGE = D_UPPER - D_LOWER;
+    public static final double P_UPPER = 1.5, P_LOWER = 0.0, P_RANGE = P_UPPER - P_LOWER;
+    public static final double I_UPPER = 0.0005, I_LOWER = 0.0, I_RANGE = I_UPPER - I_LOWER;
     public static final double I_BOUND_UPPER = 10000.0, I_BOUND_LOWER = 0.0, I_BOUND_RANGE = I_BOUND_UPPER - I_BOUND_LOWER;
 
     private static final int GRAD_DESCENT_ITERATIONS = Integer.MAX_VALUE;
-    private static final double GRAD_DESCENT_THRESHOLD = 0.00000001;
-    private static final double ALPHA = 0.005;
+    private static final double GRAD_DESCENT_THRESHOLD = 0.75;
+    private static final double ALPHA = 1e-8;
 
     public PIDTuner(InvertedPendulum pendulum) {
         this.pid = pendulum.getPID();
@@ -63,8 +63,8 @@ public class PIDTuner {
         for (int j = 0; j < NUM_TESTS; j++) {
             double d = random.nextDouble() * D_RANGE + D_LOWER;
             double p = random.nextDouble() * P_RANGE + P_LOWER;
-            double i = 0;//random.nextDouble() * I_RANGE + I_LOWER;
-            double bound = 0;//random.nextDouble() * I_BOUND_RANGE + I_BOUND_LOWER;
+            double i = random.nextDouble() * I_RANGE + I_LOWER;
+            double bound = 10_000;//random.nextDouble() * I_BOUND_RANGE + I_BOUND_LOWER;
 
             pid.setConstants(d, p, i, bound);
 
@@ -123,53 +123,55 @@ public class PIDTuner {
 
             d2terms[i] = dterms[i] * dterms[i];
             pd2terms[i] = d2terms[i] * pterms[i];
-            id2terms[i] = d2terms[i] * dterms[i];
+            id2terms[i] = d2terms[i] * iterms[i];
             d3terms[i] = d2terms[i] * dterms[i];
 
-//            i2terms[i] = iterms[i] * iterms[i];
-//            pi2terms[i] = i2terms[i] * pterms[i];
-//            i2dterms[i] = i2terms[i] * dterms[i];
-//            i3terms[i] = i2terms[i] * iterms[i];
+            i2terms[i] = iterms[i] * iterms[i];
+            pi2terms[i] = i2terms[i] * pterms[i];
+            i2dterms[i] = i2terms[i] * dterms[i];
+            i3terms[i] = i2terms[i] * iterms[i];
 //
 //            i2bounds[i] = ibounds[i] * ibounds[i];
 //            i3bounds[i] = i2bounds[i] * ibounds[i];
         }
-        Regression regression = new Regression(new double[][]{dterms, pterms, /*iterms, ibounds,*/
-                d2terms, p2terms, /*i2terms, i2bounds,*/
-                d3terms, p3terms, /*i3terms, i3bounds*/}, score);
+        Regression regression = new Regression(new double[][]{dterms, pterms, iterms,
+                pdterms, piterms, idterms, d2terms, p2terms, i2terms,
+                p2dterms, pd2terms, p2iterms, pi2terms, id2terms, i2dterms, d3terms, p3terms, i3terms, pidterms}, score);
         regression.linear();
         System.out.println(regression.getSumOfSquares());
         return regression;
     }
 
     public void gradientDescent(Regression regression) {
-        double[] coefficients = regression.getCoeff(); //aw + bx + cy + dz + ew^2 + fx^2 + gy^2 + hz^2 + iw^3 + jx^3 + ky^3 + lz^3
-        // ap + bi + cd + dbound + ep^2 + fi^2 + gd^2 +
+        double[] coefficients = regression.getCoeff();
         PIDFunction f = new PIDFunction(coefficients);
 
-        double d = 0;//random.nextDouble() * D_RANGE + D_LOWER;
+        double d = random.nextDouble() * D_RANGE + D_LOWER;
         double p = random.nextDouble() * P_RANGE + P_LOWER;
-        double i = 0;//random.nextDouble() * I_RANGE + I_LOWER;
-        double bound = 0;//random.nextDouble() * I_BOUND_RANGE + I_BOUND_LOWER;
-        double absError = f.solve(d, p, i, bound);
+        double i = random.nextDouble() * I_RANGE + I_LOWER;
+        double bound = 10_000;//random.nextDouble() * I_BOUND_RANGE + I_BOUND_LOWER;
+        double absError = Math.abs(f.solve(d, p, i, bound));
 
         int count = 0;
 
         while (count++ < GRAD_DESCENT_ITERATIONS && absError > GRAD_DESCENT_THRESHOLD) {
-            double gradD = f.gradientD(d);
-            double gradP = f.gradientP(p);
-//            double gradI = f.gradientI(i);
+
+            double gradD = f.gradientD(d, p, i);
+            double gradP = f.gradientP(d, p, i);
+            double gradI = f.gradientI(d, p, i);
 //            double gradBound = f.gradientBound(bound);
 
             d = d - ALPHA * gradD;
             p = p - ALPHA * gradP;
-//            i = i - ALPHA * gradI;
+            i = i - ALPHA/1e10 * gradI;
 //            bound = bound - ALPHA * gradBound;
-            absError = f.solve(d, p, i, bound);
+            absError = Math.abs(f.solve(d, p, i, bound));
+//            System.out.println(String.format("%f %f %f %f", d, p, i, absError));
         }
         System.out.println(count);
 
         pid.setConstants(d, p, i, bound);
+        System.out.println(String.format("%f %f %f %f", d, p, i, absError));
     }
 
 
