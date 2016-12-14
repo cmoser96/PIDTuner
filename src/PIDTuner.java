@@ -20,10 +20,16 @@ public class PIDTuner {
 
     private double[] dterms = new double[NUM_TESTS], pterms = new double[NUM_TESTS],
             iterms = new double[NUM_TESTS], ibounds = new double[NUM_TESTS];
-    private double[] dterms2 = new double[NUM_TESTS], pterms2 = new double[NUM_TESTS],
-            iterms2 = new double[NUM_TESTS], ibounds2 = new double[NUM_TESTS];
-    private double[] dterms3 = new double[NUM_TESTS], pterms3 = new double[NUM_TESTS],
-            iterms3 = new double[NUM_TESTS], ibounds3 = new double[NUM_TESTS];
+    private double[] d2terms = new double[NUM_TESTS], p2terms = new double[NUM_TESTS],
+            i2terms = new double[NUM_TESTS], i2bounds = new double[NUM_TESTS],
+            piterms = new double[NUM_TESTS], idterms = new double[NUM_TESTS],
+            pdterms = new double[NUM_TESTS];
+    private double[] d3terms = new double[NUM_TESTS], p3terms = new double[NUM_TESTS],
+            i3terms = new double[NUM_TESTS], i3bounds = new double[NUM_TESTS],
+            p2iterms = new double[NUM_TESTS], pi2terms = new double[NUM_TESTS],
+            p2dterms = new double[NUM_TESTS], pd2terms = new double[NUM_TESTS],
+            i2dterms = new double[NUM_TESTS], id2terms = new double[NUM_TESTS],
+            pidterms = new double[NUM_TESTS];
     private final double[] score = new double[NUM_TESTS];
     private Vector3D originalPos;
 
@@ -105,21 +111,32 @@ public class PIDTuner {
 
     private Regression getRegression() {
         for (int i = 0; i < NUM_TESTS; i++) {
-            pterms2[i] = pterms[i] * pterms[i];
-            pterms3[i] = pterms2[i] * pterms[i];
+            pdterms[i] = pterms[i] * dterms[i];
+            piterms[i] = pterms[i] * iterms[i];
+            idterms[i] = iterms[i] * dterms[i];
+            pidterms[i] = pterms[i] * iterms[i] * dterms[i];
 
-            dterms2[i] = dterms[i] * dterms[i];
-            dterms3[i] = dterms2[i] * dterms[i];
+            p2terms[i] = pterms[i] * pterms[i];
+            p2dterms[i] = p2terms[i] * dterms[i];
+            p2iterms[i] = p2terms[i] * iterms[i];
+            p3terms[i] = p2terms[i] * pterms[i];
 
-//            iterms2[i] = iterms[i] * iterms[i];
-//            iterms3[i] = iterms2[i] * iterms[i];
+            d2terms[i] = dterms[i] * dterms[i];
+            pd2terms[i] = d2terms[i] * pterms[i];
+            id2terms[i] = d2terms[i] * dterms[i];
+            d3terms[i] = d2terms[i] * dterms[i];
+
+//            i2terms[i] = iterms[i] * iterms[i];
+//            pi2terms[i] = i2terms[i] * pterms[i];
+//            i2dterms[i] = i2terms[i] * dterms[i];
+//            i3terms[i] = i2terms[i] * iterms[i];
 //
-//            ibounds2[i] = ibounds[i] * ibounds[i];
-//            ibounds3[i] = ibounds2[i] * ibounds[i];
+//            i2bounds[i] = ibounds[i] * ibounds[i];
+//            i3bounds[i] = i2bounds[i] * ibounds[i];
         }
         Regression regression = new Regression(new double[][]{dterms, pterms, /*iterms, ibounds,*/
-                dterms2, pterms2, /*iterms2, ibounds2,*/
-                dterms3, pterms3, /*iterms3, ibounds3*/}, score);
+                d2terms, p2terms, /*i2terms, i2bounds,*/
+                d3terms, p3terms, /*i3terms, i3bounds*/}, score);
         regression.linear();
         System.out.println(regression.getSumOfSquares());
         return regression;
@@ -127,6 +144,7 @@ public class PIDTuner {
 
     public void gradientDescent(Regression regression) {
         double[] coefficients = regression.getCoeff(); //aw + bx + cy + dz + ew^2 + fx^2 + gy^2 + hz^2 + iw^3 + jx^3 + ky^3 + lz^3
+        // ap + bi + cd + dbound + ep^2 + fi^2 + gd^2 +
         PIDFunction f = new PIDFunction(coefficients);
 
         double d = 0;//random.nextDouble() * D_RANGE + D_LOWER;
