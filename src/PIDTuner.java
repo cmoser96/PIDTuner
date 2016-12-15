@@ -39,8 +39,8 @@ public class PIDTuner {
     public static final double I_BOUND_UPPER = 10000.0, I_BOUND_LOWER = 0.0, I_BOUND_RANGE = I_BOUND_UPPER - I_BOUND_LOWER;
 
     private static final int GRAD_DESCENT_ITERATIONS = Integer.MAX_VALUE;
-    private static final double GRAD_DESCENT_THRESHOLD = 0.75;
-    private static final double ALPHA = 1e-8;
+    private static final double GRAD_DESCENT_THRESHOLD = 0.01;
+    private static final double ALPHA = 1e-9;
 
     public PIDTuner(InvertedPendulum pendulum) {
         this.pid = pendulum.getPID();
@@ -88,7 +88,6 @@ public class PIDTuner {
             sim.runSimulation(TIMEOUT_TIME_STEPS);
 
             pendulum.resetToPos(originalPos);
-            System.out.println(j);
         }
 
         try {
@@ -130,15 +129,12 @@ public class PIDTuner {
             pi2terms[i] = i2terms[i] * pterms[i];
             i2dterms[i] = i2terms[i] * dterms[i];
             i3terms[i] = i2terms[i] * iterms[i];
-//
-//            i2bounds[i] = ibounds[i] * ibounds[i];
-//            i3bounds[i] = i2bounds[i] * ibounds[i];
         }
         Regression regression = new Regression(new double[][]{dterms, pterms, iterms,
                 pdterms, piterms, idterms, d2terms, p2terms, i2terms,
                 p2dterms, pd2terms, p2iterms, pi2terms, id2terms, i2dterms, d3terms, p3terms, i3terms, pidterms}, score);
         regression.linear();
-        System.out.println(regression.getSumOfSquares());
+//        System.out.println(regression.getSumOfSquares());
         return regression;
     }
 
@@ -163,10 +159,8 @@ public class PIDTuner {
 
             d = d - ALPHA * gradD;
             p = p - ALPHA * gradP;
-            i = i - ALPHA/1e10 * gradI;
-//            bound = bound - ALPHA * gradBound;
+            i = i - ALPHA/1e9 * gradI;
             absError = Math.abs(f.solve(d, p, i, bound));
-//            System.out.println(String.format("%f %f %f %f", d, p, i, absError));
         }
         System.out.println(count);
 

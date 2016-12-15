@@ -59,5 +59,6 @@ for s in score:
     else:
         score_color.append(s)
 plt.scatter(d, p, c=score_color)
+plt.title("d vs p (darker colors correspond to lower/better scores)")
 plt.gray()
 plt.show()

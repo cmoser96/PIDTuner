@@ -39,8 +39,8 @@ public class PIDFunction {
 
 
     public double gradientD(double d, double p, double i) {
-        return (d1) + (d2 * d) + (pd * p) + ((id * i) +
-                (d3 * d * d) + (pd2 * p * d) + (p2d * p * p) + (id2 * i * d) + (i2d * i * i)) + (pid * p * i);
+        return (d1) + (d2 * d) + (pd * p) + (id * i) +
+                (d3 * d * d) + (pd2 * p * d) + (p2d * p * p) + (id2 * i * d) + (i2d * i * i) + (pid * p * i);
     }
 
     public double gradientP(double d, double p, double i) {

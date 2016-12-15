@@ -52,7 +52,11 @@ public class PID {
         return istateBound;
     }
 
-    public void setConstants(double newDTerm, double newPTerm, double newITerm, double newIBound){
+    public double getIstate() {
+        return istate;
+    }
+
+    public void setConstants(double newDTerm, double newPTerm, double newITerm, double newIBound) {
         this.dterm = newDTerm;
         this.pterm = newPTerm;
         this.iterm = newITerm;
